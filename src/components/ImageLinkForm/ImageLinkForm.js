@@ -9,7 +9,10 @@ import {
 } from '@material-ui/core'
 
 
+
 import './imagelinkform.scss'
+
+
 
 const usestyles = makeStyles({
     typography:{
@@ -37,7 +40,7 @@ const usestyles = makeStyles({
     }
 })
 
-export default function ImageLinkForm () {
+export default function ImageLinkForm ({inputChange,onSubmit}) {
 
     const classes = usestyles()
 
@@ -48,8 +51,8 @@ export default function ImageLinkForm () {
             </Typography>
 
             <div className="input-div">
-                <Input className={classes.input} type="text" style={{backgroundColor:'white',width:'75%'}}  placeholder="enter image url"/>
-               <Button className={classes.button}> Detect</Button>
+                <Input onChange={inputChange} className={classes.input} type="text" style={{backgroundColor:'white',width:'75%'}}  placeholder="enter image url"/>
+               <Button onClick={onSubmit} className={classes.button}> Detect</Button>
             </div>
         </div>
     )

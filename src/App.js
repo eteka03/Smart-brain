@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 
 
 //components
@@ -10,6 +10,9 @@ import Rank from './components/Rank/Rank'
 
 //mui stuff
 import Container from '@material-ui/core/Container';
+
+//clarifai stuff
+import Clarifai from 'clarifai'
 
 import Particles from 'react-particles-js';
 
@@ -30,7 +33,66 @@ const particleParams = {
   }
 }
 
+
+//build new clarifai client
+const app = new Clarifai.App({
+  apiKey:'d9063d1088a24d228ee4dbfab177ca12'
+})
+
+
 function App() {
+
+  const[ inputUrl ,setInputUrl]= useState(-1)
+  const [imageUrl , setImageurl] = useState('')
+  const [box,setBox] = useState('')
+
+  const calculateFaceLocation = data => {
+      const face = data.outputs[0].data.regions[0].region_info.bounding_box
+
+      const image = document.getElementById('inputImage')
+      
+      const width = Number(image.width)
+      const height = Number(image.height)
+
+     return {
+       leftCol: face.left_col * width,
+       topRow: face.top_row * height,
+       rightCol: width - (face.right_col *  width),
+       bottomRow: height - (face.bottom_row * height)
+     }
+  }
+
+
+  
+
+ const displayFaceBox = box =>{ console.log(box);setBox(box)}
+
+  const handleChange  = event => {
+      setInputUrl(event.target.value || -1)
+  }
+  
+  
+
+  const handleSubmit = () => {
+  if(inputUrl === -1){ alert("enter an image url")}
+  else{
+      setImageurl(inputUrl)
+
+    app.models
+        .predict(Clarifai.DEMOGRAPHICS_MODEL, 
+              inputUrl
+        )
+        .then(response => {
+          displayFaceBox(calculateFaceLocation(response))
+       
+        }   
+      
+         )
+         .catch(err => console.log(err));
+  }
+   
+  }
+
   return (
     <Container maxWidth="false" disableGutters
     >
@@ -39,8 +101,8 @@ function App() {
       <Navigation />
        <Logo /> 
        <Rank />
-       <ImageLinkForm />
-      <FaceRecognition />
+       <ImageLinkForm inputChange ={handleChange} onSubmit={handleSubmit}/>
+      <FaceRecognition box={box} imageUrl={imageUrl} />
 
     </div>
 
