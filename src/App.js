@@ -1,12 +1,22 @@
 import React,{useState,useEffect} from 'react';
 
+import {
+BrowserRouter as Router,
+Link,
+Switch,
+useHistory,
+useLocation,
+useParams,
+Redirect,
+Route
+} from 'react-router-dom'
+
 
 //components
 import Navigation from './components/Navigation/Navigation'
-import Logo from './components/Logo/Logo'
-import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm'
-import FaceRecognition from './components/FaceRecognition/FaceRecognition'
-import Rank from './components/Rank/Rank'
+import Brain from './components/Brain/Brain'
+import Signin from './components/Signin/Signin'
+import SignUp from './components/SignUp/SignUp'
 
 //mui stuff
 import Container from '@material-ui/core/Container';
@@ -40,8 +50,20 @@ const app = new Clarifai.App({
 })
 
 
+const users = [
+  {
+    email:'eteka03.akpaki@gmail.com',
+    pwd:'lucia'
+  }
+]
+
+
 function App() {
 
+  
+
+  const [tryLogin , setTryLogin] = useState(false)
+  const [isAuthenticated,setIsAuthenticated] = useState(false)
   const[ inputUrl ,setInputUrl]= useState(-1)
   const [imageUrl , setImageurl] = useState('')
   const [box,setBox] = useState('')
@@ -54,6 +76,8 @@ function App() {
       const width = Number(image.width)
       const height = Number(image.height)
 
+      console.log("face",face)
+      console.log(height,width)
      return {
        leftCol: face.left_col * width,
        topRow: face.top_row * height,
@@ -83,6 +107,7 @@ function App() {
               inputUrl
         )
         .then(response => {
+          console.log("response",response)
           displayFaceBox(calculateFaceLocation(response))
        
         }   
@@ -93,11 +118,40 @@ function App() {
    
   }
 
+ 
   return (
-    <Container maxWidth="false" disableGutters
+
+    <Router>
+<Container maxWidth="false" disableGutters
     >
     <div className="App">
       <Particles params={particleParams} className="particles" />
+        <Navigation />
+</div>
+</Container>
+        <Switch>
+
+          <Route path="/" exact >
+            {()=><h1>welcome</h1>}
+          </Route>
+            <Route path="/signin">
+              <Signin />
+            </Route>
+
+            <Route path="/signup">
+                <SignUp />
+            </Route>
+
+            <Route path="/brain/:name">
+            <Brain handleChange={handleChange} handleSubmit={handleSubmit} imageUrl={imageUrl} box={box}/>
+            </Route>
+        </Switch>
+
+ {/*<Container maxWidth="false" disableGutters
+    >
+    <div className="App">
+      <Particles params={particleParams} className="particles" />
+        <Signin />
       <Navigation />
        <Logo /> 
        <Rank />
@@ -107,8 +161,16 @@ function App() {
     </div>
 
 
-    </Container>
+  </Container>*/}
+    </Router>
+
+    
+   
   );
 }
 
 export default App;
+
+
+
+

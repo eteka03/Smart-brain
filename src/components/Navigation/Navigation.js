@@ -1,5 +1,6 @@
 import React from 'react'
 
+import {useHistory,Link} from 'react-router-dom'
 //mui 
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -31,15 +32,21 @@ const useStyles = makeStyles({
     }
 })
 
-export default function Navigation() {
+export default function Navigation({isAuthenticated,handleAuthentication,showLogin}) {
     const classes = useStyles()
-
-
+    
+    let history = useHistory()
     return (
+
       <AppBar position="static" className={classes.appbar}>
           <Toolbar className={classes.toolbar}>
 
-            <Button className={classes.button}>Sign out</Button>
+            {isAuthenticated ? <Button>Sign Out</Button>
+                :
+
+            (<><Button onClick={()=>history.push("/signin")}>Sign In</Button>
+             <Button onClick={()=>history.push("/signup")}>Sign Up</Button></>)
+        }
           </Toolbar>
       </AppBar>
     )
