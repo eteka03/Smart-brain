@@ -2,12 +2,7 @@ import React,{useState,useEffect} from 'react';
 
 import {
 BrowserRouter as Router,
-Link,
 Switch,
-useHistory,
-useLocation,
-useParams,
-Redirect,
 Route
 } from 'react-router-dom'
 
@@ -50,23 +45,16 @@ const app = new Clarifai.App({
 })
 
 
-const users = [
-  {
-    email:'eteka03.akpaki@gmail.com',
-    pwd:'lucia'
-  }
-]
+
 
 
 function App() {
 
-  
-
-  const [tryLogin , setTryLogin] = useState(false)
-  const [isAuthenticated,setIsAuthenticated] = useState(false)
   const[ inputUrl ,setInputUrl]= useState(-1)
   const [imageUrl , setImageurl] = useState('')
   const [box,setBox] = useState('')
+  const [user,setUser] = useState('')
+   
 
   const calculateFaceLocation = data => {
       const face = data.outputs[0].data.regions[0].region_info.bounding_box
@@ -118,6 +106,8 @@ function App() {
    
   }
 
+  const handleUser = loaduser => setUser(loaduser)
+
  
   return (
 
@@ -135,7 +125,7 @@ function App() {
             {()=><h1>welcome</h1>}
           </Route>
             <Route path="/signin">
-              <Signin />
+              <Signin handleUser={handleUser} />
             </Route>
 
             <Route path="/signup">
@@ -143,25 +133,10 @@ function App() {
             </Route>
 
             <Route path="/brain/:name">
-            <Brain handleChange={handleChange} handleSubmit={handleSubmit} imageUrl={imageUrl} box={box}/>
+            <Brain user={user} handleChange={handleChange} handleSubmit={handleSubmit} imageUrl={imageUrl} box={box}/>
             </Route>
         </Switch>
 
- {/*<Container maxWidth="false" disableGutters
-    >
-    <div className="App">
-      <Particles params={particleParams} className="particles" />
-        <Signin />
-      <Navigation />
-       <Logo /> 
-       <Rank />
-       <ImageLinkForm inputChange ={handleChange} onSubmit={handleSubmit}/>
-      <FaceRecognition box={box} imageUrl={imageUrl} />
-
-    </div>
-
-
-  </Container>*/}
     </Router>
 
     

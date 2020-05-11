@@ -1,11 +1,17 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
-
+const cors = require('cors')
 
 
 const app = express()
 
+
+//middleware
 app.use(express.json())
+app.use(cors())
+
+
+//dummy database
 const database ={
     users: [
         {
@@ -37,6 +43,7 @@ const database ={
 
 
 
+//all routes
 app.get('/',(req,res)=>{
     console.log(database.users)
     res.send(database.users)
@@ -74,9 +81,12 @@ app.post('/register',(req,res)=>{
         const saltRounds = 10      
         
     
+     
         bcrypt.hash(pwd, saltRounds)
                 .then(hash => {
             
+
+          
             database.users.push({
                 id:'12345',
                 name:name,
@@ -93,7 +103,7 @@ app.post('/register',(req,res)=>{
     
 
        
-
+        
        
 })
 

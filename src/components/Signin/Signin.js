@@ -13,7 +13,7 @@ import {
 //mui stuff
 import Typography from '@material-ui/core/Typography'
 
-export default function Signin() {
+export default function Signin({handleUser}) {
 
     let history = useHistory()
     const [email,setEmail] = useState('')
@@ -21,24 +21,33 @@ export default function Signin() {
  
 
     const handleChange = e => {
-      if(e.target.type === "email"){
-        
-       
+      if(e.target.type === "email"){    
          setEmail(e.target.value)
-
-        console.log('email',email)
-      
       }
       else{
         setPwd(e.target.value)
       }
-
-     
-      
     }
 
-    const verifyIdentity = () => {
-      history.push('/brain/eteka')
+    const verifyIdentity = (e) => {
+      e.preventDefault()
+
+      fetch('http://localhost:8000/signin',{
+        method:'post',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email,pwd})
+      })
+      .then(resp => resp.json())
+      .then(data => {
+        if(data === 'sucess'){
+         handleUser('eteka')
+        }
+        else{
+         alert('error')
+        }
+      })
+      .then(()=>history.push('/brain/eteka'))
+      .catch(err => console.log('error',err))
     }
 
     return (
