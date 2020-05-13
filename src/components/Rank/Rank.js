@@ -22,12 +22,12 @@ const usestyles = makeStyles({
     }
 })
 
-export default function Rank() {
+export default function Rank({user,entries}) {
     const classes = usestyles()
     return (
         <div className={`${classes.rank}  rank-div`}>
-          <Typography className={classes.typography} align="center" variant='h4' >{'claver, your current rank is...'}</Typography>  
-    <Typography className={classes.typography} align="center" variant='h5'>{'#5'}</Typography>
+          <Typography className={classes.typography} align="center" variant='h4' >{`${user.name}, your current rank is...`}</Typography>  
+    <Typography className={classes.typography} align="center" variant='h5'>{entries}</Typography>
         </div>
     )
 }

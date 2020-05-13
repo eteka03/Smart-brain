@@ -38,15 +38,15 @@ export default function Signin({handleUser}) {
         body:JSON.stringify({email,pwd})
       })
       .then(resp => resp.json())
-      .then(data => {
-        if(data === 'sucess'){
-         handleUser('eteka')
+      .then(user => {
+        if(user.id){
+         handleUser(user)
+         history.push(`/brain/${user.name}`)
         }
         else{
          alert('error')
         }
       })
-      .then(()=>history.push('/brain/eteka'))
       .catch(err => console.log('error',err))
     }
 

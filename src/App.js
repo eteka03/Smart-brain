@@ -11,7 +11,7 @@ Route
 import Navigation from './components/Navigation/Navigation'
 import Brain from './components/Brain/Brain'
 import Signin from './components/Signin/Signin'
-import SignUp from './components/SignUp/SignUp'
+import Register from './components/Register/Register'
 
 //mui stuff
 import Container from '@material-ui/core/Container';
@@ -54,7 +54,7 @@ function App() {
   const [imageUrl , setImageurl] = useState('')
   const [box,setBox] = useState('')
   const [user,setUser] = useState('')
-   
+   const [entries,setEntries] = useState(0)
 
   const calculateFaceLocation = data => {
       const face = data.outputs[0].data.regions[0].region_info.bounding_box
@@ -83,7 +83,23 @@ function App() {
       setInputUrl(event.target.value || -1)
   }
   
-  
+  const updateEntries = () => {
+    fetch('http://localhost:8000/image',{
+        method:'put',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id:user.id})
+      })
+      .then(resp => resp.json())
+      .then(entries => {
+        if(entries.length > 0){
+         setEntries(entries[0])
+        }
+        else{
+         alert('error')
+        }
+      })
+      .catch(err => console.log('error',err))
+  }
 
   const handleSubmit = () => {
   if(inputUrl === -1){ alert("enter an image url")}
@@ -95,18 +111,21 @@ function App() {
               inputUrl
         )
         .then(response => {
-          console.log("response",response)
-          displayFaceBox(calculateFaceLocation(response))
+                 displayFaceBox(calculateFaceLocation(response))
        
         }   
       
          )
+         .then(()=>updateEntries())
          .catch(err => console.log(err));
   }
    
   }
 
-  const handleUser = loaduser => setUser(loaduser)
+  const handleUser = loaduser => {
+    setEntries(loaduser.entries)
+    setUser(loaduser)
+  }
 
  
   return (
@@ -129,11 +148,11 @@ function App() {
             </Route>
 
             <Route path="/signup">
-                <SignUp />
+                <Register handleUser={handleUser} />
             </Route>
 
             <Route path="/brain/:name">
-            <Brain user={user} handleChange={handleChange} handleSubmit={handleSubmit} imageUrl={imageUrl} box={box}/>
+            <Brain user={user} entries={entries} handleChange={handleChange} handleSubmit={handleSubmit} imageUrl={imageUrl} box={box}/>
             </Route>
         </Switch>
 
