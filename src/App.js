@@ -84,7 +84,7 @@ function App() {
   }
   
   const updateEntries = () => {
-    fetch('http://localhost:8000/image',{
+    fetch('https://lit-bastion-18332.herokuapp.com/image',{
         method:'put',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({id:user.id})

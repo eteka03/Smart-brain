@@ -7,16 +7,20 @@ const knex = require('knex')
 //controllers
 const register = require('./controllers/register')
 
+
+//registering env
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 //database connection
 const db = knex({
     client: 'pg',
     connection: {
-      host : '127.0.0.1',
-      user : 'eteka',
-      password : 'eteka',
-      database : 'smart-brain;'
+      connectionString : process.env.DATABASE_URL,
+        ssl:false,
     }
   });
+
+
 
 
 
@@ -35,6 +39,7 @@ app.use(cors())
 //all routes
 app.get('/',(req,res)=>{
    
+    res.end('yes')
 })
 
 
@@ -100,6 +105,6 @@ app.put('/image',(req,res)=>{
 })
 
 
-app.listen(8000,()=>{
-    console.log(`àpp runnin on port 8000 ${process.env.DB_HOST}`)
+app.listen(process.env.PORT,()=>{
+    console.log(`àpp runnin on port 8000 ${process.env.PORT}`)
 })

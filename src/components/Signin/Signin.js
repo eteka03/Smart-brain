@@ -32,7 +32,7 @@ export default function Signin({handleUser}) {
     const verifyIdentity = (e) => {
       e.preventDefault()
 
-      fetch('http://localhost:8000/signin',{
+      fetch('https://lit-bastion-18332.herokuapp.com/signin',{
         method:'post',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({email,pwd})

@@ -34,7 +34,7 @@ export default function Register({handleUser}) {
       const registrer = e =>{
           e.preventDefault()
 
-          fetch('http://localhost:8000/register',{
+          fetch('https://lit-bastion-18332.herokuapp.com/register',{
               method:'post',
               headers:{'Content-Type':'application/json'},
               body:JSON.stringify({email,pwd,name})
